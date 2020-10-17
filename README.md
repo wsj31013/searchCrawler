@@ -4,11 +4,14 @@ Elasticsearch, FSCrawler로 구현한 문서 검색엔진 입니다.
 참고한 문서, 주소 URL을 하단에 작성 하였습니다.
 ***  
 
+## Architecture
+업데이트 예정
 
 ## 설치 방법
+업데이트 예정
 
 ## 사용 방법
-
+업데이트 예정
 
 ## Ref
 _FSCrawler Github URL : [FSCrawler Github](https://github.com/dadoonet/fscrawler)_

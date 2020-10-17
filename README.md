@@ -1,7 +1,12 @@
 # Documents Search Projects
 * * *
 Elasticsearch, Nori 형태소 분석기, FSCrawler로 구현한 문서 검색엔진 입니다.
+
 참고한 문서, 주소 URL을 하단에 작성 하였습니다.
+
+pptx, pdf, word 등의 문서를 엘라스틱서치에 노리 형태소 분석기를 통해 인덱싱 합니다.
+FSCrawler로 주기적으로 업데이트 합니다.
+
 ***  
 
 ## Architecture
@@ -21,7 +26,9 @@ Elasticsearch, Nori 형태소 분석기, FSCrawler로 구현한 문서 검색엔
 ## How to Install 
 ```xml
 1. 소스를 클론 한뒤 web 으로 사용되는 nginx를 빌드 합니다.
-2. 
+2. FSCrawler가 생성하는 Mapping인 _settings.json을 본인이 사용할 형태소 분석기에 맞게 수정 합니다.
+
+현재 이 레포지토리에 있는 _settings.json은 노리, 엘라스틱서치7에 맞게 수정된 파일 입니다.
 ```
 
 

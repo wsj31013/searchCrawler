@@ -1,0 +1,7 @@
+
+# Fscrawler data directory
+data/
+
+_settings-origin.json
+.DS_Store
+

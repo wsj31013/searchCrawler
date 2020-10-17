@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Documents Search System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">
+          Documents Search
+        </h1>
+        <div id="count_index"></div>
+        <br><br>
+          <div class="span3"></div>
+          <div class="span3">
+            <input type="text" class="login-field" value="" placeholder="Keyword" id="search-keyword" />
+            <a class="btn btn-primary btn-lg" href="#" id="search-button">Search</a>
+          </div>        
+        <!--  <div class="span2">
+            <a class="btn btn-primary btn-large btn-block" href="#" id="search-button">Search</a>
+          </div> -->
+        <br>
+        <div class="span12"><input type="checkbox" name="chk_operator" id="chk_operator" value="OR 검색">OR 검색        
+        <br><br>
+        <div id="count_result"></div>
+      </div> <!-- /demo-headline -->
+      <div class="span12">
+        <div class="block">
+          <div id="result_table">
+          </div>
+        </div>
+      </div>
+    <!-- Load JS here for greater good =============================-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/1.1.0/js/jquery.dropkick-1.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-placeholder/2.3.1/jquery.placeholder.js"></script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+
+    
+    <script type="text/javascript">
+      $("#search-button").click(function() {
+        search();
+      });
+
+     
+      $("#search-keyword").live('keypress', function(e) {
+        if (e.which == 13) { search(); }
+      });
+
+      $(document).ready( function() {
+          update_count();
+      });
+        
+      // count 업데이트
+      function update_count() {
+        $.ajax( {
+          url: 'http://elasticsearch:9200/cobain/_count',
+          dataType:'json',
+          type: 'get'
+        }).done(function(data) {
+          if (data != null) {
+            html = "총 " + data.count + "개의 문서가 저장되어 있습니다.";
+            $("#count_index").html(html);
+          }
+        }).error(function(e) {
+          alert("error");
+        });
+      }
+
+        
+      // 검색 메뉴 실행
+      function search() {
+        var keyword = $("#search-keyword").val();
+
+        if (keyword.length == 0) {
+          alert('입력된 키워드가 없습니다.');
+          return;
+        }
+
+        var start = new Date().getTime();
+          
+        var checked = "&default_operator=AND";
+        if ($("#chk_operator").is(':checked')) { checked = "&default_operator=OR"; }
+
+        $.ajax( {
+          url: 'http://elasticsearch:9200/cobain/_search?size=10000&q=*' + keyword + '*' + checked,
+          dataType:'json',
+          type: 'get'
+        }).done(function(data) {
+          if (data != null) {
+            var count = 0;
+            // var html = "<table class='table table-striped'><thead><th width=30>순서</th><th>파일이름</th><th width=50>구분</th><th width=150>파일경로</th></thead>";
+            var html = "<table class='table table-striped'><thead><th width=50>순서</th><th width=200>파일이름</th><th width=50>구분</th><th width=200>파일경로</th></thead>";
+            var end = new Date().getTime();
+            var time = end - start;
+            
+            html_count = "총 <b>" + data.hits.hits.length + "</b>개의 문서가 검색되었습니다.<br>" + (time/1000) + "초의 시간이 소요되었습니다.";
+            $("#count_result").html(html_count);
+              
+            $.each(data.hits.hits, function(index, value) {
+              count++;
+              var docu_type = "문서";
+
+              if (value["_source"]["text"] == "") { docu_type = "이미지"; }
+	
+              // html += "<tr><td>" + count + "</td><td>" + "<a href='../download/" + value["_source"]["resourceName"] + "' target=_blank>" + value["_source"]["resourceName"] + "</a></td><td>" + docu_type + "</td><td>" + value["_source"]["created"] + "</td></tr>";
+              //html += "<tr><td>" + count + "</td><td>" + "<a href='../download/" + value["_source"]["file"]["filename"]+ "' target=_blank>" + value["_source"]["file"]["filename"] + "</a></td><td>" + docu_type + "</td><td>" + value["_source"]["file"]["url"] + "</td></tr>";
+              html += "<tr><td>" + count + "</td><td>" + value["_source"]["file"]["filename"] + "</a></td><td>" + docu_type + "</td><td>" + value["_source"]["file"]["url"] + "</td></tr>";
+            });
+            html += "</table>";
+            $("#result_table").html(html);
+          }
+        }).error(function(e) {
+          alert("error");
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -28,21 +28,14 @@ FSCrawler로 주기적으로 업데이트 합니다.
 ```xml
 1. 소스를 클론 한뒤 web 으로 사용되는 nginx를 빌드 합니다.
 2. FSCrawler가 생성하는 Mapping에 사용되는 _settings.json을 본인이 사용할 형태소 분석기에 맞게 수정 합니다.
-3. 
 ```
 현재 이 레포지토리에 있는 [_settings.json](https://github.com/wsj31013/searchCrawler/blob/main/config/_default/7/_settings.json)은 노리, 엘라스틱서치7에 맞게 수정된 파일 입니다.
 
 
 
 ## How to Use
-````xml
-1. Start
-- Elasticsearch Multiple Node
-# docker-compose up -d 
-
-- Elasticsearch Single Node
-# docker-compose -f single-search-compose.yml up -d
-````
+소스를 클론 받아 직접 구축 해보는 튜토리얼을 아래 저의 기술 블로그에 포스팅 하였습니다.
+_사용법 : [내 블로그](https://cobain.me/2020/10/19/ElasticSearch-FSCrawler.html)_
 
 
 ## Ref
